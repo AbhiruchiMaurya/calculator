@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		Calculator
+	</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.js"></script>
+</head>
+<body ng-app="myApp" ng-controller="myCtrl">
+<style type="text/css">
+	.wrapper{
+		margin: 30px auto;			
+	}
+	.container{
+		border: 2px solid #000;
+		background-color: #e6ffe6;	
+		padding: 10px 20px;
+	}
+	header,footer{
+		text-align: center;
+		padding: 10px 20px;
+	}
+	.container.show{
+		background-color: #ffcc99;	
+		border-bottom: 0px;
+	}
+	.view,.result{
+		font-size: 20px;
+		font-weight: 600;
+		padding: 4px;
+		background-color: #fff0e6;
+	}
+	.resultDiv{
+		margin-top: 10px;
+	}
+	button{
+		padding: 10px 20px;
+		border: 1px solid #ffffff;
+		margin: 5px;
+		font-size: 30px;
+		font-weight: 700;
+		min-width: 100px; 
+	}
+	.otherskey{
+		background-color: #000099;
+	}
+	p{
+		font-size: 17px;
+		font-weight: 500;
+		font-style: italic;
+	}
+	header{
+		font-size: 20px;
+		font-weight: 700;
+		font-style: bold;
+		text-decoration: underline;
+		text-decoration-style: wavy;
+	}
+</style>
+<div class="wrapper">
+	<header>
+		Basic Calculator
+	</header>
+	<div class="container show">
+		<div class="text-center">
+			<input type="text" ng-disabled="true" class="view" ng-model="userInput">	
+			<input type="hidden" ng-disabled="true" class="view" ng-model="currentNumber">			
+		</div>
+		<div class="text-center resultDiv">
+			<input type="text" ng-disabled="true" class="result" ng-model="result">				
+		</div>
+	</div>
+	<div class="container">
+		<div class="text-center row1">
+			<button class="button btn-primary" value="1" ng-click="currentNumber = currentNumber + 1;operandDisable = false;userInput = userInput + '1';">1</button>
+			<button class="button btn-primary" value="2" ng-click="currentNumber = currentNumber + 2;operandDisable = false;userInput = userInput + '2';">2</button>
+			<button class="button btn-primary" value="3" ng-click="currentNumber = currentNumber + 3;operandDisable = false;userInput = userInput + '3';">3</button>
+			<button class="button btn-primary otherskey" value="+" ng-click="plus();userInput = userInput + '+';" ng-disabled="operandDisable">+</button>
+		</div>
+		<div class="text-center row2">
+			<button class="button btn-primary" value="4" ng-click="currentNumber = currentNumber + 4;operandDisable = false;userInput = userInput + '4';">4</button>
+			<button class="button btn-primary" value="5" ng-click="currentNumber = currentNumber + 5;operandDisable = false;userInput = userInput + '5';">5</button>
+			<button class="button btn-primary" value="6" ng-click="currentNumber = currentNumber + 6;operandDisable = false;userInput = userInput + '6';">6</button>
+			<button class="button btn-primary otherskey" value="-" ng-click="userInput = userInput + '-';currentNumber = '';equalTO();" ng-disabled="operandDisable">-</button>
+		</div>
+		<div class="text-center row3">
+			<button class="button btn-primary" value="7" ng-click="currentNumber = currentNumber + 7;operandDisable = false;userInput = userInput + '7';">7</button>
+			<button class="button btn-primary" value="8" ng-click="currentNumber = currentNumber + 8;operandDisable = false;userInput = userInput + '8';">8</button>
+			<button class="button btn-primary" value="9" ng-click="currentNumber = currentNumber + 9;operandDisable = false;userInput = userInput + '9';">9</button>
+			<button class="button btn-primary otherskey" value="x" ng-click="userInput = userInput + 'x';currentNumber = '';equalTO();" ng-disabled="operandDisable">x</button>
+		</div>
+		<div class="text-center row4">
+			<button class="button btn-primary otherskey" value="!" ng-click="erase();">C</button>
+			<button class="button btn-primary" value="0" ng-click="currentNumber = currentNumber + 0;operandDisable = false;userInput = userInput + '0';">0</button>
+			<button class="button btn-primary otherskey" value="=" ng-click="equalTO();">=</button>
+			<button class="button btn-primary otherskey" value="/" ng-click="userInput = userInput + '/';currentNumber = '';equalTO();" ng-disabled="operandDisable">/</button>
+		</div>
+	</div>
+	<footer>
+		<p>
+			Basic calculator to calculate only one operand input.
+		</p>
+	</footer>
+</div>
+<script type="text/javascript">
+
+	var app = angular.module('myApp',[]);
+	app.controller("myCtrl",function($scope){
+		var retainValue = 0;
+		var userInput = ''
+		$scope.userInput = '';
+		$scope.result = 0;
+		$scope.operandDisable = false;
+		$scope.currentNumber = '';
+
+
+		$scope.plus = function () {
+			$scope.result = parseInt($scope.result) + parseInt($scope.currentNumber);			
+			$scope.operandDisable = true;
+			$scope.currentNumber = '';
+		}
+
+		$scope.subtract = function (pres,currentNumberS) {console.log("received = "+($scope.result));
+			if($scope.result){
+				$scope.result = parseInt($scope.result) - parseInt(currentNumberS);				
+			}
+			else{
+				$scope.result = parseInt(pres) - parseInt(currentNumberS);
+			}
+			$scope.operandDisable = true;
+			$scope.currentNumber = '';
+		}
+
+		$scope.multiply = function (prem,currentNumberM) {
+			if($scope.result){
+				$scope.result = parseInt($scope.result) * parseInt(currentNumberM);				
+			}
+			else{
+				$scope.result = parseInt(prem) * parseInt(currentNumberM);
+			}
+			
+			$scope.operandDisable = true;
+			$scope.currentNumber = '';
+		}
+
+		$scope.divide = function (pred,currentNumberD) {
+			if($scope.result){
+				$scope.result = parseInt($scope.result) / parseInt(currentNumberD);			
+			}
+			else{
+				$scope.result = parseInt(pred) / parseInt(currentNumberD);
+			}
+			
+			$scope.operandDisable = true;
+			$scope.currentNumber = '';
+		}
+
+		$scope.equalTO = function () {
+			var x = ($scope.userInput).length;
+			var y = ($scope.currentNumber).length;
+			var z = x-y;
+			var operand = ($scope.userInput).substring(z-1)[0];
+			var pass = parseInt($scope.currentNumber); 
+			if(operand == '-'){
+				;
+				$scope.subtract((($scope.userInput).split('-')[0]),pass);
+			}
+			else if(operand == 'x'){
+				$scope.multiply((($scope.userInput).split('x')[0]),pass);
+			}
+			else if(operand == '/'){
+				$scope.divide((($scope.userInput).split('/')[0]),pass);
+			}
+			else if(operand == '+'){
+				$scope.plus();
+			}
+			$scope.result = (parseInt($scope.result) == 0) ? '' : parseInt($scope.result) ;
+			$scope.operandDisable = false;
+			 
+		}
+
+		$scope.erase = function(){
+			$scope.userInput = '';
+			$scope.result = '';
+			retainValue = 0;
+			result = 0;
+			$scope.currentNumber = '';
+		}
+	});
+</script>
+</body>
+</html>
